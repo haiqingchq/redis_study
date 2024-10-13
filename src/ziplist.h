@@ -1,31 +1,31 @@
 /*
- * Copyright (c) 2009-2012, Pieter Noordhuis <pcnoordhuis at gmail dot com>
- * Copyright (c) 2009-current, Redis Ltd.
- * All rights reserved.
+ * Copyright (c) 2009-2012, Pieter Noordhuis <pcnoordhuis at gmail dot com> 版权所有。
+ * 版权所有 (c) 2009-2012，Redis 有限公司。
+ * 保留所有权利。
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * 允许以源代码和二进制形式进行再分发和使用，无论是否经过
+ * 允许在满足以下条件的情况下，以源代码和二进制形式进行再分发和使用，无论是否进行修改：
  *
- *   * Redistributions of source code must retain the above copyright notice,
- *     this list of conditions and the following disclaimer.
- *   * Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *   * Neither the name of Redis nor the names of its contributors may be used
- *     to endorse or promote products derived from this software without
- *     specific prior written permission.
+ * 重新分发源代码必须保留上述版权声明、
+ * 本条件清单和以下免责声明。
+ * 二进制形式的再分发必须复制上述版权声明、本条件清单和以下免责声明。
+ * 二进制形式的再分发必须在与该软件一起提供的
+ * 文档和/或随发行版提供的其他材料中复制上述版权声明、本条件列表和以下免责声明。
+ * Redis 的名称及其贡献者的名称均不得用于
+ * 在未经
+ * 事先书面许可。
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ * 本软件由版权所有者和贡献者 “按原样 ”提供。
+ * 任何明示或暗示的保证，包括但不限于
+ * 本软件由版权所有者和贡献者 “按原样 ”提供。
+ * 免责声明。在任何情况下，版权所有者或贡献者均不
+ * 对任何直接、间接、附带、特殊、惩戒性或
+ * 直接、间接、附带、特殊、惩戒性或间接损害赔偿（包括但不限于采购
+ * 使用、数据或利润损失；或业务中断）负责。
+ * 合同、严格责任或侵权行为）。
+ * 合同、严格责任或侵权（包括疏忽或其他原因）
+ * 因使用本软件而以任何方式造成的损害，即使已被告知发生此类损害的可能性。
+ * 即使已被告知此类损害的可能性。
  */
 
 #ifndef _ZIPLIST_H

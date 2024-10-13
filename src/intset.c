@@ -142,7 +142,7 @@ static uint8_t intsetSearch(intset *is, int64_t value, uint32_t *pos) {
         }
     }
 
-    // 3、直接进行二分查找，找到了就返回1，没找到就返回0
+    // 3、直接进行二分查找
     while(max >= min) {
         mid = ((unsigned int)min + (unsigned int)max) >> 1;
         cur = _intsetGet(is,mid);
@@ -154,7 +154,7 @@ static uint8_t intsetSearch(intset *is, int64_t value, uint32_t *pos) {
             break;
         }
     }
-
+    // 4、找到了就返回1，没找到就返回0
     if (value == cur) {
         if (pos) *pos = mid;
         return 1;
@@ -221,7 +221,9 @@ static void intsetMoveTail(intset *is, uint32_t from, uint32_t to) {
     memmove(dst,src,bytes);
 }
 
-/* 将一个整数插入到指定的intset中 */
+/**
+ * 将一个整数插入到指定的intset中
+*/
 intset *intsetAdd(intset *is, int64_t value, uint8_t *success) {
     /*  
         *is 是插入到哪一个intset中
@@ -261,19 +263,26 @@ intset *intsetAdd(intset *is, int64_t value, uint8_t *success) {
     return is;
 }
 
-/* Delete integer from intset */
+/**
+ * 从intset中删除一个指定的元素
+ */
 intset *intsetRemove(intset *is, int64_t value, int *success) {
+    // 1、获取当前value的encoding
     uint8_t valenc = _intsetValueEncoding(value);
     uint32_t pos;
+
     if (success) *success = 0;
 
+    // 2、判断value的编码是否小于intset的编码，同时是否能够在intset中找到这个元素
     if (valenc <= intrev32ifbe(is->encoding) && intsetSearch(is,value,&pos)) {
+        // 3、获取当前intset的长度，赋值给len
         uint32_t len = intrev32ifbe(is->length);
 
         /* We know we can delete */
+        // 4、可以删除元素了，就将success赋值为1，表示删除成功
         if (success) *success = 1;
 
-        /* Overwrite value with tail and update length */
+        // 5、时候后面的数据覆盖value值，同时更新intset的长度
         if (pos < (len-1)) intsetMoveTail(is,pos+1,pos);
         is = intsetResize(is,len-1);
         is->length = intrev32ifbe(len-1);

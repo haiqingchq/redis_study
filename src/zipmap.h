@@ -1,16 +1,5 @@
-/* String -> String Map data structure optimized for size.
- *
- * See zipmap.c for more info.
- *
- * --------------------------------------------------------------------------
- *
- * Copyright (c) 2009-Present, Redis Ltd.
- * All rights reserved.
- *
- * Licensed under your choice of the Redis Source Available License 2.0
- * (RSALv2) or the Server Side Public License v1 (SSPLv1).
- */
-
+// 字符串 -> 字符串映射数据结构的大小已优化。
+ 
 #ifndef _ZIPMAP_H
 #define _ZIPMAP_H
 

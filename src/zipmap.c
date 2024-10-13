@@ -1,58 +1,60 @@
-/* String -> String Map data structure optimized for size.
- * This file implements a data structure mapping strings to other strings
- * implementing an O(n) lookup data structure designed to be very memory
- * efficient.
+/* 字符串 -> 字符串映射数据结构的大小已优化。
+ * 该文件实现了一个将字符串映射到其他字符串的数据结构
+ * 实现了一个 O(n) 查找数据结构，其设计非常节省内存。
+ * 高效。
  *
- * The Redis Hash type uses this data structure for hashes composed of a small
- * number of elements, to switch to a hash table once a given number of
- * elements is reached.
+ * Redis Hash 类型将此数据结构用于由少量元素组成的哈希值。
+ * 一旦达到给定的元素数量，就会切换到哈希表。
+ * 元素达到一定数量后，就会切换到哈希表。
  *
- * Given that many times Redis Hashes are used to represent objects composed
- * of few fields, this is a very big win in terms of used memory.
+ * 鉴于 Redis 哈希表多次被用于表示由少量字段组成的对象，因此这是个很大的问题。
+ * 鉴于很多时候 Redis 哈希表都是用来表示由少量字段组成的对象，这在内存使用方面是一个很大的优势。
  *
  * --------------------------------------------------------------------------
  *
- * Copyright (c) 2009-Present, Redis Ltd.
- * All rights reserved.
+ * 版权所有 (c) 2009 年至今，Redis 有限公司。
+ * 保留所有权利。
  *
- * Licensed under your choice of the Redis Source Available License 2.0
- * (RSALv2) or the Server Side Public License v1 (SSPLv1).
+ * 根据 Redis Source Available License 2.0 (RSALv2) 或 Server Side Public License v1 (SSPLv1) 授权。
+ * (RSALv2) 或服务器端公共许可证 v1 (SSPLv1)。
  */
 
-/* Memory layout of a zipmap, for the map "foo" => "bar", "hello" => "world":
+/* zipmap 的内存布局，如 “foo” => “bar”, “hello” => “world”：
  *
- * <zmlen><len>"foo"<len><free>"bar"<len>"hello"<len><free>"world"
+ * <zmlen><len>“foo”<len><free>“bar”<len>“hello”<len><free>"world”
  *
- * <zmlen> is 1 byte length that holds the current size of the zipmap.
- * When the zipmap length is greater than or equal to 254, this value
- * is not used and the zipmap needs to be traversed to find out the length.
+ <zmlen> 是 1 个字节长度，用于保存 zipmap 的当前大小。
+ * 当 zipmap 长度大于或等于 254 时，不使用此值。
+ * 当 zipmap 长度大于或等于 254 时，不使用此值，需要遍历 zipmap 以找出长度。
  *
- * <len> is the length of the following string (key or value).
- * <len> lengths are encoded in a single value or in a 5 bytes value.
- * If the first byte value (as an unsigned 8 bit value) is between 0 and
- * 253, it's a single-byte length. If it is 254 then a four bytes unsigned
- * integer follows (in the host byte ordering). A value of 255 is used to
- * signal the end of the hash.
+ <len> 是以下字符串（键或值）的长度。
+ <len> 长度以单个值或 5 个字节值编码。
+ * 如果第一个字节值（无符号 8 位值）介于 0 和
+ * 253，则为单字节长度。如果是 254，那么接下来就是一个四字节的无符号
+ * 整数（按主机字节排序）。255 的值用于
+ * 表示哈希结束。
  *
- * <free> is the number of free unused bytes after the string, resulting
- * from modification of values associated to a key. For instance if "foo"
- * is set to "bar", and later "foo" will be set to "hi", it will have a
- * free byte to use if the value will enlarge again later, or even in
- * order to add a key/value pair if it fits.
+ <free> 是字符串后未使用的空闲字节数。
+ * 是字符串后未使用的空闲字节数。例如，如果 "foo”
+ * 被设置为 “bar”，之后 “foo ”将被设置为 “hi”，那么它将有一个
+ * 如果以后该值再次增大，甚至为了添加键/值，将有一个空闲字节可供使用。
+ * 如果合适，还可以添加键/值对。
  *
- * <free> is always an unsigned 8 bit number, because if after an
- * update operation there are more than a few free bytes, the zipmap will be
- * reallocated to make sure it is as small as possible.
+ <free> 始终是一个无符号 8 位数，因为如果在更新操作后
+ * 更新操作后，如果有超过几个空闲字节，zipmap 将被
+ * 重新分配，以确保它尽可能小。
  *
- * The most compact representation of the above two elements hash is actually:
+ * 上述两个元素散列的最简洁表示法实际上是
  *
- * "\x02\x03foo\x03\x00bar\x05hello\x05\x00world\xff"
+ * "\x02\x03foo\x03\x00bar\x05hello\x05\x00world\xff”
  *
- * Note that because keys and values are prefixed length "objects",
- * the lookup will take O(N) where N is the number of elements
- * in the zipmap and *not* the number of bytes needed to represent the zipmap.
- * This lowers the constant times considerably.
+ * 请注意，因为键和值的前缀长度都是 “objects”、
+ * 查找将花费 O(N)，其中 N 是 zipmap 中元素的数量，而不是 O(N)。
+ * 而不是表示 zipmap 所需的字节数。
+ * 这大大降低了常数时间。
  */
+
+
 
 #include <stdio.h>
 #include <string.h>
